@@ -42,7 +42,7 @@ Id of deployment
 ## Example usage
 
 ```yaml
-uses: actions/lagrowthmachine/deployment-builder-action@v1.1
+uses: lagrowthmachine/deployment-builder-action-public@v1.2
 with:
   token: 'xxxxx'
   ref: 'master'
