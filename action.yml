@@ -1,0 +1,27 @@
+name: 'deployment-builder-action'
+description: 'Create deployment on github'
+
+inputs:
+  token: # github token that can create deployment. Test it before
+    description: 'Github token'
+    required: true
+  ref: # The ref to deploy. This can be a branch, tag, or SHA.
+    description: 'The ref to deploy. This can be a branch, tag, or SHA.'
+    required: true
+  environment: # Name for the target deployment environment, which can be changed when setting a deploy status. For example, production, staging, or qa
+    description: 'Name for the target deployment environment, which can be changed when setting a deploy status. For example, production, staging, or qa.'
+    required: true
+  auto_merge: # Attempts to automatically merge the default branch into the requested ref, if it is behind the default branch.
+    description: 'Attempts to automatically merge the default branch into the requested ref, if it is behind the default branch.'
+  description:  # Short description of the deployment.
+    description: 'Short description of the deployment.'
+  production:  # Specifies if the given environment is one that end-users directly interact with. Default: true when environment is production and false otherwise.
+    description: 'Specifies if the given environment is one that end-users directly interact with. Default: true when environment is production and false otherwise.'
+  status: #Can be one of: error, failure, inactive, in_progress, queued, pending, success
+    description: 'Can be one of: error, failure, inactive, in_progress, queued, pending, success'
+outputs:
+  deployment_id: # id of deplyment
+    description: 'Id of the deployment'
+runs:
+  using: 'node16'
+  main: './build/index.js'
