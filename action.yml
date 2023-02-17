@@ -1,6 +1,8 @@
 name: 'deployment-builder-action'
-description: 'Create deployment on github'
-
+description: 'Create deployment on github for Jira integrations (deployment | build)'
+branding:
+  icon: 'arrow-up-circle'
+  color: 'blue'
 inputs:
   token: # github token that can create deployment. Test it before
     description: 'Github token'
