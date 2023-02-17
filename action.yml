@@ -1,4 +1,4 @@
-name: 'deployment-builder-action'
+name: 'deployment-builder-action-public'
 description: 'Create deployment on github for Jira integrations (deployment | build)'
 branding:
   icon: 'arrow-up-circle'
