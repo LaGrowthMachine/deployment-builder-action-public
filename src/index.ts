@@ -31,23 +31,6 @@ async function run() {
         const status = core.getInput("status", { required: false, trimWhitespace: true });
         const productionEnabled = core.getInput("production", { required: false, trimWhitespace: true }) === "true" ? true : false;
         const repo = `${context.repo.owner}/${context.repo.repo}`;
-        console.log(JSON.stringify({
-            url: `https://api.github.com/repos/${repo}/deployments`,
-            repo,
-            ref,
-            auto_merge,
-            environment,
-            production_environment: productionEnabled,
-        }, null, 4));
-        const res1 = await axios.get(`https://api.github.com/orgs/${context.repo.owner}/repos`, {
-            headers: {
-                Accept: 'application/vnd.github+json',
-                Authorization: `Bearer ${token}`,
-                'X-GitHub-Api-Version': '2022-11-28',
-                'User-Agent': '@lagrowthmachine-script',
-            }
-        });
-        console.log('res1', res1);
         const res = await axios.post(`https://api.github.com/repos/${repo}/deployments`, 
             {
                 ref,
@@ -64,7 +47,7 @@ async function run() {
                 },
             }
         );
-        const deploymentId = res.data.json.id;
+        const deploymentId = res.data.id;
         core.setOutput("deployment_id", deploymentId);
         if (status) {
             await setStatus(deploymentId, status, { repo, token })

@@ -40,14 +40,6 @@ function run() {
             const status = core.getInput("status", { required: false, trimWhitespace: true });
             const productionEnabled = core.getInput("production", { required: false, trimWhitespace: true }) === "true" ? true : false;
             const repo = `${context.repo.owner}/${context.repo.repo}`;
-            console.log(JSON.stringify({
-                url: `https://api.github.com/repos/${repo}/deployments`,
-                repo,
-                ref,
-                auto_merge,
-                environment,
-                production_environment: productionEnabled,
-            }, null, 4));
             const res = yield axios_1.default.post(`https://api.github.com/repos/${repo}/deployments`, {
                 ref,
                 auto_merge,
@@ -61,7 +53,7 @@ function run() {
                     'User-Agent': '@lagrowthmachine-script',
                 },
             });
-            const deploymentId = res.data.json.id;
+            const deploymentId = res.data.id;
             core.setOutput("deployment_id", deploymentId);
             if (status) {
                 yield setStatus(deploymentId, status, { repo, token });
