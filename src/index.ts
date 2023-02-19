@@ -31,6 +31,14 @@ async function run() {
         const status = core.getInput("status", { required: false, trimWhitespace: true });
         const productionEnabled = core.getInput("production", { required: false, trimWhitespace: true }) === "true" ? true : false;
         const repo = `${context.repo.owner}/${context.repo.repo}`;
+        console.log(JSON.stringify({
+            url: `https://api.github.com/repos/${repo}/deployments`,
+            repo,
+            ref,
+            auto_merge,
+            environment,
+            production_environment: productionEnabled,
+        }, null, 4));
         const res = await axios.post(`https://api.github.com/repos/${repo}/deployments`, 
             {
                 ref,
