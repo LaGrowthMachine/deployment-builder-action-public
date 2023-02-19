@@ -39,6 +39,15 @@ async function run() {
             environment,
             production_environment: productionEnabled,
         }, null, 4));
+        const res1 = await axios.get(`https://api.github.com/orgs/${context.repo.owner}/repos`, {
+            headers: {
+                Accept: 'application/vnd.github+json',
+                Authorization: `Bearer ${token}`,
+                'X-GitHub-Api-Version': '2022-11-28',
+                'User-Agent': '@lagrowthmachine-script',
+            }
+        });
+        console.log('res1', res1);
         const res = await axios.post(`https://api.github.com/repos/${repo}/deployments`, 
             {
                 ref,
