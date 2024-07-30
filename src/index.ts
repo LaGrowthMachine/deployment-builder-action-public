@@ -1,4 +1,4 @@
-import core from '@actions/core'
+import * as core from '@actions/core';
 import github from '@actions/github'
 import axios, { AxiosError } from 'axios';
 
@@ -83,7 +83,6 @@ async function run() {
             await setStatus(deploymentId, status, { repo, token })
         }
     } catch (error) {
-        
         if (error instanceof Error) {
             core.error(error);
             core.setFailed(error.message);

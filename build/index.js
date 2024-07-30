@@ -36,7 +36,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createDeployment = void 0;
-const core_1 = __importDefault(require("@actions/core"));
+const core = __importStar(require("@actions/core"));
 const github_1 = __importDefault(require("@actions/github"));
 const axios_1 = __importStar(require("axios"));
 function setStatus(deploymentId, status, deps) {
@@ -74,7 +74,7 @@ function createDeployment(params) {
             return res.data;
         }
         catch (e) {
-            core_1.default.info(JSON.stringify(e instanceof axios_1.AxiosError ? (_a = e.response) === null || _a === void 0 ? void 0 : _a.data : (e instanceof Error ? e.message : e), null, 2));
+            core.info(JSON.stringify(e instanceof axios_1.AxiosError ? (_a = e.response) === null || _a === void 0 ? void 0 : _a.data : (e instanceof Error ? e.message : e), null, 2));
             console.log('error', JSON.stringify(e instanceof axios_1.AxiosError ? (_b = e.response) === null || _b === void 0 ? void 0 : _b.data : (e instanceof Error ? e.message : e), null, 2));
             throw e;
         }
@@ -85,15 +85,15 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const context = github_1.default.context;
-            const token = core_1.default.getInput("token", { required: true, trimWhitespace: true });
-            const ref = core_1.default.getInput("ref", { required: false, trimWhitespace: true }) || context.ref;
-            const environment = core_1.default.getInput("environment", { required: true, trimWhitespace: true });
-            const auto_merge = (core_1.default.getInput("auto_merge", { required: false, trimWhitespace: true }) === 'true' ? true : false) || false;
-            const status = core_1.default.getInput("status", { required: false, trimWhitespace: true });
-            const productionEnabled = core_1.default.getInput("production", { required: false, trimWhitespace: true }) === "true" ? true : false;
-            const requiredContexts = core_1.default.getInput("required_contexts", { required: false, trimWhitespace: true }).split(",");
+            const token = core.getInput("token", { required: true, trimWhitespace: true });
+            const ref = core.getInput("ref", { required: false, trimWhitespace: true }) || context.ref;
+            const environment = core.getInput("environment", { required: true, trimWhitespace: true });
+            const auto_merge = (core.getInput("auto_merge", { required: false, trimWhitespace: true }) === 'true' ? true : false) || false;
+            const status = core.getInput("status", { required: false, trimWhitespace: true });
+            const productionEnabled = core.getInput("production", { required: false, trimWhitespace: true }) === "true" ? true : false;
+            const requiredContexts = core.getInput("required_contexts", { required: false, trimWhitespace: true }).split(",");
             const repo = `${context.repo.owner}/${context.repo.repo}`;
-            core_1.default.info('Deployment creation will start');
+            core.info('Deployment creation will start');
             const deployment = yield createDeployment({
                 repo,
                 ref,
@@ -104,19 +104,19 @@ function run() {
                 required_contexts: requiredContexts,
             });
             const deploymentId = deployment.id;
-            core_1.default.setOutput("deployment_id", deploymentId);
+            core.setOutput("deployment_id", deploymentId);
             if (status) {
                 yield setStatus(deploymentId, status, { repo, token });
             }
         }
         catch (error) {
             if (error instanceof Error) {
-                core_1.default.error(error);
-                core_1.default.setFailed(error.message);
+                core.error(error);
+                core.setFailed(error.message);
             }
             else {
-                core_1.default.error(`Unknown error`);
-                core_1.default.setFailed(`Unknown error`);
+                core.error(`Unknown error`);
+                core.setFailed(`Unknown error`);
             }
         }
     });
