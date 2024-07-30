@@ -1,5 +1,5 @@
-const core = require('@actions/core');
-const github = require('@actions/github');
+import core from '@actions/core'
+import github from '@actions/github'
 import axios from 'axios';
 
 async function setStatus(deploymentId: string, status: string, deps: {
@@ -21,6 +21,33 @@ async function setStatus(deploymentId: string, status: string, deps: {
     );
 }
 
+async function createDeployment(params: {
+    repo: string;
+    ref: string;
+    auto_merge: boolean;
+    environment: string;
+    production_environment: boolean;
+    token: string;
+}) {
+    const res = await axios.post(`https://api.github.com/repos/${params.repo}/deployments`, 
+        {
+            ref: params.ref,
+            auto_merge: params.auto_merge,
+            environment: params.environment,
+            production_environment: params.production_environment,
+        },
+        {
+            headers: {
+                Accept: 'application/vnd.github+json',
+                Authorization: `Bearer ${params.token}`,
+                'X-GitHub-Api-Version': '2022-11-28',
+                'User-Agent': '@lagrowthmachine-script',
+            },
+        }
+    );
+    return res.data;
+}
+
 async function run() {
     try {
         const context = github.context;
@@ -31,23 +58,15 @@ async function run() {
         const status = core.getInput("status", { required: false, trimWhitespace: true });
         const productionEnabled = core.getInput("production", { required: false, trimWhitespace: true }) === "true" ? true : false;
         const repo = `${context.repo.owner}/${context.repo.repo}`;
-        const res = await axios.post(`https://api.github.com/repos/${repo}/deployments`, 
-            {
-                ref,
-                auto_merge,
-                environment,
-                production_environment: productionEnabled,
-            },
-            {
-                headers: {
-                    Accept: 'application/vnd.github+json',
-                    Authorization: `Bearer ${token}`,
-                    'X-GitHub-Api-Version': '2022-11-28',
-                    'User-Agent': '@lagrowthmachine-script',
-                },
-            }
-        );
-        const deploymentId = res.data.id;
+        const deployment = await createDeployment({
+            repo,
+            ref,
+            auto_merge: true,
+            environment,
+            production_environment: productionEnabled,
+            token,
+        });
+        const deploymentId = deployment.id;
         core.setOutput("deployment_id", deploymentId);
         if (status) {
             await setStatus(deploymentId, status, { repo, token })
