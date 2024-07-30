@@ -2,3 +2,4 @@
 node_modules
 build/index.test.js
 build/node_modules
+vitest.config.js
