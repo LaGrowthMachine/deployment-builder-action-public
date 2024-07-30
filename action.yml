@@ -21,6 +21,8 @@ inputs:
     description: 'Specifies if the given environment is one that end-users directly interact with. Default: true when environment is production and false otherwise.'
   status: #Can be one of: error, failure, inactive, in_progress, queued, pending, success
     description: 'Can be one of: error, failure, inactive, in_progress, queued, pending, success'
+  required_contexts: # The deployment will only be created if all statuses for the required contexts pass.
+    description: 'The deployment will only be created if all statuses for the required contexts pass.'
 outputs:
   deployment_id: # id of deplyment
     description: 'Id of the deployment'
