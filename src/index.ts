@@ -50,6 +50,7 @@ export async function createDeployment(params: {
         );
         return res.data;
     } catch (e) {
+        core.info(JSON.stringify(e instanceof AxiosError ? e.response?.data : (e instanceof Error ? e.message : e), null, 2));
         console.log('error', JSON.stringify(e instanceof AxiosError ? e.response?.data : (e instanceof Error ? e.message : e), null, 2));
         throw e;
     }
@@ -66,6 +67,7 @@ async function run() {
         const productionEnabled = core.getInput("production", { required: false, trimWhitespace: true }) === "true" ? true : false;
         const requiredContexts = core.getInput("required_contexts", { required: false, trimWhitespace: true }).split(",");
         const repo = `${context.repo.owner}/${context.repo.repo}`;
+        core.info('Deployment creation will start');
         const deployment = await createDeployment({
             repo,
             ref,
@@ -81,6 +83,7 @@ async function run() {
             await setStatus(deploymentId, status, { repo, token })
         }
     } catch (error) {
+        
         if (error instanceof Error) {
             core.error(error);
             core.setFailed(error.message);

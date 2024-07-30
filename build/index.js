@@ -54,7 +54,7 @@ function setStatus(deploymentId, status, deps) {
     });
 }
 function createDeployment(params) {
-    var _a;
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const res = yield axios_1.default.post(`https://api.github.com/repos/${params.repo}/deployments`, {
@@ -74,7 +74,8 @@ function createDeployment(params) {
             return res.data;
         }
         catch (e) {
-            console.log('error', JSON.stringify(e instanceof axios_1.AxiosError ? (_a = e.response) === null || _a === void 0 ? void 0 : _a.data : (e instanceof Error ? e.message : e), null, 2));
+            core_1.default.info(JSON.stringify(e instanceof axios_1.AxiosError ? (_a = e.response) === null || _a === void 0 ? void 0 : _a.data : (e instanceof Error ? e.message : e), null, 2));
+            console.log('error', JSON.stringify(e instanceof axios_1.AxiosError ? (_b = e.response) === null || _b === void 0 ? void 0 : _b.data : (e instanceof Error ? e.message : e), null, 2));
             throw e;
         }
     });
@@ -92,6 +93,7 @@ function run() {
             const productionEnabled = core_1.default.getInput("production", { required: false, trimWhitespace: true }) === "true" ? true : false;
             const requiredContexts = core_1.default.getInput("required_contexts", { required: false, trimWhitespace: true }).split(",");
             const repo = `${context.repo.owner}/${context.repo.repo}`;
+            core_1.default.info('Deployment creation will start');
             const deployment = yield createDeployment({
                 repo,
                 ref,
