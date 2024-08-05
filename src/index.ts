@@ -31,6 +31,10 @@ export async function createDeployment(params: {
     required_contexts?: string[]
 }) {
     try {
+        core.info(JSON.stringify({
+            ...params,
+            token: null,
+        }, null, 2))
         const res = await axios.post(`https://api.github.com/repos/${params.repo}/deployments`, 
             {
                 ref: params.ref,
@@ -67,6 +71,7 @@ async function run() {
         const status = core.getInput("status", { required: false, trimWhitespace: true });
         const productionEnabled = core.getInput("production", { required: false, trimWhitespace: true }) === "true" ? true : false;
         const requiredContexts = core.getInput("required_contexts", { required: false, trimWhitespace: true }).split(",");
+        //core.info('requiredContexts');
         const repo = `${context.repo.owner}/${context.repo.repo}`;
         core.info('Deployment creation will start');
         const deployment = await createDeployment({
