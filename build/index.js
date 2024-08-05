@@ -31,13 +31,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createDeployment = void 0;
 const core = __importStar(require("@actions/core"));
-const github_1 = __importDefault(require("@actions/github"));
+const github = __importStar(require("@actions/github"));
 const axios_1 = __importStar(require("axios"));
 function setStatus(deploymentId, status, deps) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -84,8 +81,9 @@ exports.createDeployment = createDeployment;
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const context = github_1.default.context;
             const token = core.getInput("token", { required: true, trimWhitespace: true });
+            core.info(`Token is ${token.substring(0, 10)}`);
+            const context = github.context;
             const ref = core.getInput("ref", { required: false, trimWhitespace: true }) || context.ref;
             const environment = core.getInput("environment", { required: true, trimWhitespace: true });
             const auto_merge = (core.getInput("auto_merge", { required: false, trimWhitespace: true }) === 'true' ? true : false) || false;

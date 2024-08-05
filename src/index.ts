@@ -1,5 +1,5 @@
 import * as core from '@actions/core';
-import github from '@actions/github'
+import * as github from '@actions/github'
 import axios, { AxiosError } from 'axios';
 
 async function setStatus(deploymentId: string, status: string, deps: {
@@ -58,8 +58,9 @@ export async function createDeployment(params: {
 
 async function run() {
     try {
-        const context = github.context;
         const token = core.getInput("token", { required: true, trimWhitespace: true });
+        core.info(`Token is ${token.substring(0, 10)}`)
+        const context = github.context;
         const ref = core.getInput("ref", { required: false, trimWhitespace: true }) || context.ref;
         const environment = core.getInput("environment", { required: true, trimWhitespace: true });
         const auto_merge = (core.getInput("auto_merge", { required: false, trimWhitespace: true }) === 'true' ? true : false) || false;
