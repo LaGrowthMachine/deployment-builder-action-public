@@ -81,7 +81,7 @@ async function run() {
             environment,
             production_environment: productionEnabled,
             token,
-            required_contexts: requiredContexts,
+            required_contexts: requiredContexts.filter((item: string) => (item?.trim()?.length || 0) > 0),
         });
         const deploymentId = deployment.id;
         core.setOutput("deployment_id", deploymentId);

@@ -101,7 +101,7 @@ function run() {
                 environment,
                 production_environment: productionEnabled,
                 token,
-                required_contexts: requiredContexts,
+                required_contexts: requiredContexts.filter((item) => { var _a; return (((_a = item === null || item === void 0 ? void 0 : item.trim()) === null || _a === void 0 ? void 0 : _a.length) || 0) > 0; }),
             });
             const deploymentId = deployment.id;
             core.setOutput("deployment_id", deploymentId);
